@@ -1,0 +1,43 @@
+body {
+    width: 100%;
+    background-color: white;
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+}
+div.outer {
+    width: 100%;
+    text-align: center;
+}
+div.main {
+    width: 400px;
+    margin: auto;
+    text-align: center;
+}
+div.output {
+    width: 100%;
+    font-family: "Courier New", Courier, monospaced;
+    text-align: center;
+    font-size: 14px;
+}
+div.loading {
+    font-size: 14px;
+    color: red;
+}
+div.footer {
+    margin-top: 100px;
+    color: #888;
+    font-size: 12px;
+}
+h1 {
+    font-size: 36px;
+    color: #778796;
+}
+input {
+    font-family: Tahoma, Verdana, Arial, Helvetica;
+    font-size: 14px;
+}
+input.submit {
+    color: white;
+    background-color: #778796;
+    border-style: solid;
+}
+

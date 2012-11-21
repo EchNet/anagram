@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="anagram-app" default="build">
+
+    <property name="project.name" value="${ant.project.name}" />
+    <property name="antlib" location="../../antlib"/>
+
+    <import file="${antlib}/local-settings.xml" />
+    <import file="${antlib}/appengine-definitions.xml" />
+
+    <property name="anagram.lib.dir" location="${build.root.dir}/anagram"/>
+    <property name="words.lib.dir" location="${build.root.dir}/anagram-words"/>
+
+    <target name="build">
+        <copy todir="war/WEB-INF/lib" flatten="true">
+            <fileset dir="${anagram.lib.dir}">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${words.lib.dir}">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${appengine.dir}/lib/user">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="war/WEB-INF/lib">
+            <include name="*.jar"/>
+        </delete>
+    </target>
+  
+</project>
