@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="anagram-words" basedir="." default="build">
+
+    <property name="locale" value="en_US"/>
+    <property name="version" value="1.0"/>
+    <property name="antlib" location="../../../antlib"/>
+
+    <import file="${antlib}/local-settings.xml" />
+
+    <property name="anagram.dir" location="${build.root.dir}/anagram"/>
+    <property name="anagram.jar" value="${anagram.dir}/anagram-1.0.jar"/>
+
+    <property name="output.dir" location="${build.root.dir}/anagram-words"/>
+
+    <property name="gensrc.dir" location="${output.dir}/java"/>
+    <property name="package.dir" location="${gensrc.dir}/java/net/ech/anagram/words/${locale}"/>
+    <property name="words.java" value="${package.dir}/Words.java"/>
+    <property name="classes.flag" value="${output.dir}/classes.flag"/>
+    <property name="classes.dir" location="${output.dir}/classes"/>
+    <property name="output.jar" value="${output.dir}/words-${locale}-${version}.jar"/>
+
+    <target name="build" description="build" depends="source,classes,jar"/>
+
+    <target name="init">
+        <mkdir dir="${gensrc.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+    </target>
+
+    <target name="source" depends="init,source-check" unless="source-uptodate">
+        <copy todir="${gensrc.dir}">
+            <fileset dir="${basedir}/src">
+                <include name="**/*.java"/>
+            </fileset>
+            <filterset>
+                <filter token="PACKAGE" value="net.ech.anagram.words.${locale}"/>
+            </filterset>
+        </copy>
+        <java jar="${anagram.jar}" fork="true"
+                output="${classes.dir}/en_US.txt">
+            <arg value="-w"/>
+            <arg value="src/en_US.txt"/>
+            <arg value="-d"/>
+        </java>
+    </target>
+
+    <target name="source-check">
+        <uptodate property="source-uptodate" targetfile="${words.java}">
+            <srcfiles dir="src"/>
+        </uptodate>
+    </target>
+
+    <target name="classes" depends="classes-check" unless="classes-uptodate">
+        <javac destdir="${output.dir}/classes"
+                classpath="${anagram.jar}"
+                includeantruntime="false">
+            <src path="${gensrc.dir}"/>
+            <include name="**/*.java"/>
+        </javac>
+        <touch file="${classes.flag}"/>
+    </target>
+
+    <target name="classes-check">
+        <uptodate property="classes-uptodate" targetfile="${classes.flag}">
+            <srcfiles dir="${gensrc.dir}" includes="**/*.java" />
+        </uptodate>
+    </target>
+
+    <target name="jar" depends="jar-check" unless="jar-uptodate">
+        <jar destfile="${output.jar}">
+            <fileset dir="${classes.dir}"/>
+        </jar>
+    </target>
+
+    <target name="jar-check">
+        <uptodate property="jar-uptodate" targetfile="${output.jar}">
+            <srcfiles dir="${classes.dir}" includes="**/*" />
+        </uptodate>
+    </target>
+
+    <target name="clean" description="clean">
+        <delete dir="${output.dir}"/>
+    </target>
+  
+</project>

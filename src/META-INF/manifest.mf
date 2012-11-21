@@ -1,0 +1,7 @@
+Main-Class: net.ech.apps.anagram.Main
+Specification-Version: 1.0
+Specification-Vendor: ech.net
+Implementation-Title: net.ech.anagram
+Implementation-Vendor: ech.net
+Implementation-Version: 1.0
+

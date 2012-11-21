@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<project name="anagram" default="build">
+
+    <property name="project.name" value="${ant.project.name}" />
+    <property name="version" value="1.0"/>
+    <property name="antlib" location="../../antlib"/>
+
+    <import file="${antlib}/local-settings.xml" />
+
+    <property name="output.dir" value="${build.root.dir}/${project.name}"/>
+    <property name="output.jar" value="${output.dir}/${project.name}-${version}.jar"/>
+    <property name="classes.flag" value="${output.dir}/${project.name}.classes"/>
+
+    <target name="build" description="build" depends="init,classes,jar">
+        <ant dir="words" target="build" inheritAll="false" />
+    </target>
+
+    <target name="init">
+        <mkdir dir="${output.dir}/classes"/>
+    </target>
+
+    <target name="classes" depends="classes-check" unless="classes-uptodate">
+        <javac destdir="${output.dir}/classes"
+                includeantruntime="false">
+            <src path="src"/>
+            <include name="net/ech/anagram/**" />
+            <include name="net/ech/apps/**" />
+        </javac>
+        <touch file="${classes.flag}"/>
+    </target>
+
+    <target name="classes-check">
+        <uptodate property="classes-uptodate" targetfile="${classes.flag}">
+            <srcfiles dir="src" includes="net/ech/anagram/*.java" />
+            <srcfiles dir="src" includes="net/ech/apps/**/*.java" />
+        </uptodate>
+    </target>
+
+    <target name="jar" depends="jar-check" unless="jar-uptodate">
+        <jar destfile="${output.jar}" manifest="src/META-INF/manifest.mf">
+            <fileset dir="${output.dir}/classes"/>
+        </jar>
+    </target>
+
+    <target name="jar-check">
+        <uptodate property="jar-uptodate" targetfile="${output.jar}">
+            <!-- listing the manifest here does not seem to accomplish anything..  -->
+            <srcfiles dir="${output.dir}/classes" includes="**/*" />
+            <srcfiles file="src/META-INF/manifest.mf"/>
+        </uptodate>
+    </target>
+
+    <target name="run">
+        <java jar="${output.jar}" fork="true"/>
+    </target>
+
+    <target name="clean" description="clean">
+        <delete dir="${output.dir}"/>
+        <ant dir="words" target="clean" inheritAll="false" />
+    </target>
+  
+</project>
